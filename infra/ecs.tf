@@ -51,7 +51,7 @@ resource "aws_ecs_service" "main" {
   force_new_deployment               = true
 
   network_configuration {
-    security_groups  = aws_security_group.ecs_task.id
+    security_groups  = [aws_security_group.ecs_task.id]
     subnets          = data.terraform_remote_state.vpc.outputs.private_subnets_ids
     assign_public_ip = false
   }
