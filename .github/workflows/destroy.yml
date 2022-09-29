@@ -1,0 +1,133 @@
+# Workflow to deploy VPC to AWS Accounts.
+
+name: Destroy AWS Infrastructure
+
+# Controls when the workflow will run
+on:
+  # Manual Triggers the workflow upon need.
+  workflow_dispatch:
+
+
+jobs:
+  DestroyDev:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    name: Destroy Development
+    environment:
+        name: dev
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      # Checks-out repository under $GITHUB_WORKSPACE, so the job can access it
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Configure the AWS Enviromnet Variables insdie the Runner
+      - name: Configure AWS credentials
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      # Deploy the terrafrom backend Cloudformation Stack
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.3.1
+
+      # Loop through TF files, Initialize, Plan and deploy changes.
+      - name: Terraform Deploy
+        run: |
+            terraform init
+            terraform fmt -check
+            terraform workspace select dev || terraform workspace new dev
+            terraform destroy -auto-approve -input=false
+        working-directory: terraform/
+
+  DestroyStaging:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    name: Destroy Staging
+    environment:
+      name: qa
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      # Checks-out repository under $GITHUB_WORKSPACE, so the job can access it
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Configure the AWS Enviromnet Variables insdie the Runner
+      - name: Configure AWS credentials
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      # Deploy the terrafrom backend Cloudformation Stack
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.3.1
+
+      # Loop through TF files, Initialize, Plan and deploy changes.
+      - name: Terraform Deploy
+        run: |
+            terraform init
+            terraform fmt -check
+            terraform workspace select qa || terraform workspace new qa
+            terraform destroy -auto-approve -input=false
+        working-directory: terraform/
+
+  DestroyProd:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    name: Destroy Prod
+    environment:
+      name: prod
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      # Checks-out repository under $GITHUB_WORKSPACE, so the job can access it
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Configure the AWS Enviromnet Variables insdie the Runner
+      - name: Configure AWS credentials
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      # Deploy the terrafrom backend Cloudformation Stack
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.3.1
+
+      # Loop through TF files, Initialize, Plan and deploy changes.
+      - name: Terraform Deploy
+        run: |
+            terraform init
+            terraform fmt -check
+            terraform workspace select prod || terraform workspace new prod
+            terraform destroy -auto-approve -input=false
+        working-directory: terraform/
