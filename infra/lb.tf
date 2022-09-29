@@ -19,6 +19,7 @@ resource "aws_alb_target_group" "tg" {
   protocol             = "HTTP"
   vpc_id               = data.terraform_remote_state.vpc.outputs.vpc_id
   deregistration_delay = 10
+  target_type          = "ip"
 
   health_check {
     path                = "/"
