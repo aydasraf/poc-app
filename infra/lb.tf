@@ -47,7 +47,7 @@ resource "aws_alb_listener_rule" "http" {
   condition {
     host_header {
       values = [
-      "${local.service_name}.*"]
+      "${local.service_name}-*.*"]
     }
   }
 }
@@ -63,7 +63,7 @@ resource "aws_alb_listener_rule" "https" {
   condition {
     host_header {
       values = [
-      "${local.service_name}.*"]
+      "${local.service_name}-*.*"]
     }
   }
 }
