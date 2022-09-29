@@ -41,7 +41,7 @@ resource "aws_ecs_task_definition" "main" {
 
 resource "aws_ecs_service" "main" {
   name                               = "${local.service_name}-${terraform.workspace}"
-  cluster                            = data.terraform_remote_state.ecs.ecs_cluster_id
+  cluster                            = data.terraform_remote_state.ecs.outputs.ecs_cluster_id
   task_definition                    = aws_ecs_task_definition.main.arn
   desired_count                      = 1
   deployment_minimum_healthy_percent = 50
