@@ -48,7 +48,7 @@ jobs:
             terraform fmt -check
             terraform workspace select dev || terraform workspace new dev
             terraform destroy -auto-approve -input=false
-        working-directory: terraform/
+        working-directory: infra/
 
   DestroyStaging:
     # The type of runner that the job will run on
@@ -89,7 +89,7 @@ jobs:
             terraform fmt -check
             terraform workspace select qa || terraform workspace new qa
             terraform destroy -auto-approve -input=false
-        working-directory: terraform/
+        working-directory: infra/
 
   DestroyProd:
     # The type of runner that the job will run on
@@ -130,4 +130,4 @@ jobs:
             terraform fmt -check
             terraform workspace select prod || terraform workspace new prod
             terraform destroy -auto-approve -input=false
-        working-directory: terraform/
+        working-directory: infra/

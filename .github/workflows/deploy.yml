@@ -57,6 +57,7 @@ jobs:
             docker build -t $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG .
             docker push $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG
             echo "::set-output name=image::$ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG"
+        working-directory: app/
 
       # Install Terraform
       - name: Setup Terraform
@@ -71,7 +72,7 @@ jobs:
             terraform fmt -check
             terraform workspace select dev || terraform workspace new dev
             terraform apply -auto-approve -input=false
-        working-directory: terraform/
+        working-directory: infra/
 
   DeployToStaging:
     # The type of runner that the job will run on
@@ -118,6 +119,7 @@ jobs:
           docker build -t $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG .
           docker push $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG"
+        working-directory: app/
 
       # Install Terraform
       - name: Setup Terraform
@@ -132,7 +134,7 @@ jobs:
           terraform fmt -check
           terraform workspace select qa || terraform workspace new qa
           terraform apply -auto-approve -input=false
-        working-directory: terraform/
+        working-directory: infra/
 
   DeployToProd:
     # The type of runner that the job will run on
@@ -179,6 +181,7 @@ jobs:
           docker build -t $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG .
           docker push $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG"
+        working-directory: app/
 
       # Install Terraform
       - name: Setup Terraform
@@ -193,4 +196,4 @@ jobs:
           terraform fmt -check
           terraform workspace select prod || terraform workspace new prod
           terraform apply -auto-approve -input=false
-        working-directory: terraform/
+        working-directory: infra/
