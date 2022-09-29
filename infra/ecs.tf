@@ -14,9 +14,16 @@ resource "aws_ecs_task_definition" "main" {
       essential = true
       environment = [
         {
-          "DB_HOST" : "${data.terraform_remote_state.rds.outputs.url_shortener_instance_endpoint}",
-          "DB_NAME" : "url_shortener",
-          "REDIS_HOST" : "${data.terraform_remote_state.redis.outputs.redis_endpoint}"
+          "name" : "DB_HOST",
+          "value" : "${data.terraform_remote_state.rds.outputs.url_shortener_instance_endpoint}"
+        },
+        {
+          "name" : "DB_NAME",
+          "value" : "url_shortener"
+        },
+        {
+          "name" : "REDIS_HOST",
+          "value" : "${data.terraform_remote_state.redis.outputs.redis_endpoint}"
         }
       ]
       secrets = [
