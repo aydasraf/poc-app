@@ -56,7 +56,7 @@ jobs:
             # be deployed to ECS.
             docker build -t $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG .
             docker tag $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG $ECR_REGISTRY/kutt/url-shortener:latest
-            docker push $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG $ECR_REGISTRY/kutt/url-shortener:latest
+            docker push $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG
             echo "::set-output name=image::$ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG"
         working-directory: app/
 
@@ -119,7 +119,7 @@ jobs:
           # be deployed to ECS.
           docker build -t $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG .
           docker tag $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG $ECR_REGISTRY/kutt/url-shortener:latest
-          docker push $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG $ECR_REGISTRY/kutt/url-shortener:latest
+          docker push $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG 
           echo "::set-output name=image::$ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG"
         working-directory: app/
 
@@ -182,7 +182,7 @@ jobs:
           # be deployed to ECS.
           docker build -t $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG .
           docker tag $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG $ECR_REGISTRY/kutt/url-shortener:latest
-          docker push $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG $ECR_REGISTRY/kutt/url-shortener:latest
+          docker push $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG 
           echo "::set-output name=image::$ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG"
         working-directory: app/
 
