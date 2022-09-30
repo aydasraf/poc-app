@@ -55,6 +55,22 @@ resource "aws_ecs_task_definition" "main" {
           "value" : "587"
         },
         {
+          "name" : "MAIL_FROM"
+          "value" : "aydasraf.links@outlook.com"
+        },
+        {
+          "name" : "ADMIN_EMAILS"
+          "value" : "aydasraf.links@outlook.com"
+        },
+        {
+          "name" : "REPORT_EMAIL"
+          "value" : "aydasraf.links@outlook.com"
+        },
+        {
+          "name" : "CONTACT_EMAIL"
+          "value" : "aydasraf.links@outlook.com"
+        },
+        {
           "name" : "LINK_LENGTH"
           "value" : "6"
         }
