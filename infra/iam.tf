@@ -33,7 +33,7 @@ resource "aws_iam_role" "ecs_task_role" {
 data "aws_iam_policy_document" "secret_manager_access" {
   statement {
     actions   = ["secretsmanager:GetSecretValue"]
-    resources = [data.terraform_remote_state.rds.outputs.url_shortener_secret]
+    resources = [data.terraform_remote_state.rds.outputs.url_shortener_secret, "arn:aws:secretsmanager:eu-west-1:648742428820:secret:url_shortner-Qyxxnz"]
     effect    = "Allow"
   }
 }

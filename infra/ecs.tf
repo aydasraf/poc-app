@@ -19,12 +19,40 @@ resource "aws_ecs_task_definition" "main" {
           "value" : "${data.terraform_remote_state.rds.outputs.url_shortener_instance_endpoint}"
         },
         {
+          "name" : "DB_PORT",
+          "value" : "5432"
+        },
+        {
           "name" : "DB_NAME",
           "value" : "url_shortener"
         },
         {
           "name" : "REDIS_HOST",
           "value" : "${data.terraform_remote_state.redis.outputs.redis_endpoint}"
+        },
+        {
+          "name" : "REDIS_PORT",
+          "value" : "6379"
+        },
+        {
+          "name" : "SITE_NAME"
+          "value" : "Url Shortener"
+        },
+        {
+          "name" : "DEFAULT_DOMAIN"
+          "value" : "url-shortener-${terraform.workspace}.aydasraf.link"
+        },
+        {
+          "name" : "MAIL_HOST"
+          "value" : "smtp.gmail.com"
+        },
+        {
+          "name" : "MAIL_PORT"
+          "value" : "587"
+        },
+        {
+          "name" : "LINK_LENGTH"
+          "value" : "6"
         }
       ]
       secrets = [
@@ -35,6 +63,18 @@ resource "aws_ecs_task_definition" "main" {
         {
           "name" : "DB_PASSWORD",
           "valueFrom" : "${data.terraform_remote_state.rds.outputs.url_shortener_secret}:db_pass::"
+        },
+        {
+          "name" : "JWT_SECRET"
+          "valueFrom" : "arn:aws:secretsmanager:eu-west-1:648742428820:secret:url_shortner-Qyxxnz:jwt::"
+        },
+        {
+          "name" : "MAIL_USER"
+          "valueFrom" : "arn:aws:secretsmanager:eu-west-1:648742428820:secret:url_shortner-Qyxxnz:mail_user::"
+        },
+        {
+          "name" : "MAIL_PASSWORD"
+          "valueFrom" : "arn:aws:secretsmanager:eu-west-1:648742428820:secret:url_shortner-Qyxxnz:mail_pass::"
         }
       ]
       portMappings = [
