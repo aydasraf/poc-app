@@ -40,7 +40,7 @@ resource "aws_ecs_task_definition" "main" {
         },
         {
           "name" : "DEFAULT_DOMAIN"
-          "value" : "url-shortener-${terraform.workspace}.aydasraf.link"
+          "value" : "url-shortener.${terraform.workspace}.aydasraf.link"
         },
         {
           "name" : "MAIL_HOST"
