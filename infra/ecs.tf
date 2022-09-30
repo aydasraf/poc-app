@@ -44,7 +44,11 @@ resource "aws_ecs_task_definition" "main" {
         },
         {
           "name" : "MAIL_HOST"
-          "value" : "smtp.gmail.com"
+          "value" : "smtp.office365.com"
+        },
+        {
+          "name" : "MAIL_SECURE"
+          "value" : "true"
         },
         {
           "name" : "MAIL_PORT"
