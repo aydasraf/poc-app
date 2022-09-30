@@ -98,6 +98,10 @@ resource "aws_ecs_task_definition" "main" {
       }
     }
   ])
+
+  tags = merge(
+    {Name = "${local.service_name}-ecs-task"},
+  local.tags)
 }
 
 resource "aws_ecs_service" "main" {
@@ -123,6 +127,10 @@ resource "aws_ecs_service" "main" {
     container_port   = local.container_port
   }
 
+  tags = merge(
+    {Name = "${local.service_name}-ecs-service"},
+    local.tags
+  )
 
   lifecycle {
     ignore_changes = [desired_count]

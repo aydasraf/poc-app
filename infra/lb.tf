@@ -29,6 +29,10 @@ resource "aws_alb_target_group" "tg" {
     interval            = 15
     matcher             = "301"
   }
+  tags = merge(
+    {Name = "${local.service_name}-${terraform.workspace}-tg"},
+    local.tags
+  )
 }
 
 resource "aws_alb_listener_rule" "http" {
