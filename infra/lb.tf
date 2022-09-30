@@ -24,10 +24,10 @@ resource "aws_alb_target_group" "tg" {
   health_check {
     path                = "/"
     healthy_threshold   = 2
-    unhealthy_threshold = 10
-    timeout             = 30
-    interval            = 60
-    matcher             = "200-499"
+    unhealthy_threshold = 5
+    timeout             = 15
+    interval            = 30
+    matcher             = "200"
   }
 }
 
