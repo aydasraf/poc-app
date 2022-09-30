@@ -1,6 +1,6 @@
 # Workflow to deploy VPC to AWS Accounts.
 
-name: Deploy App
+name: Deploy Infra
 
 # Controls when the workflow will run
 on:
@@ -10,6 +10,8 @@ on:
   # Triggers the workflow on push event but only for the "master" branch and when the files inside tf-backend changes
   push:
     branches: [ "master" ]
+    paths:
+      - terraform/**
 
 jobs:
   DeployToDev:
@@ -43,23 +45,6 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-
-      # Docker Image Ops
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-            # Build a docker container and
-            # push it to ECR so that it can
-            # be deployed to ECS.
-            docker build -t $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG .
-            docker tag $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG $ECR_REGISTRY/kutt/url-shortener:latest
-            docker push $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG
-            docker push $ECR_REGISTRY/kutt/url-shortener:latest
-            echo "::set-output name=image::$ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG"
-        working-directory: app/
 
       # Install Terraform
       - name: Setup Terraform
@@ -108,23 +93,6 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
 
-      # Docker Image Ops
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG .
-          docker tag $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG $ECR_REGISTRY/kutt/url-shortener:latest
-          docker push $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG 
-          docker push $ECR_REGISTRY/kutt/url-shortener:latest
-          echo "::set-output name=image::$ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG"
-        working-directory: app/
-
       # Install Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -171,23 +139,6 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-
-      # Docker Image Ops
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG .
-          docker tag $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG $ECR_REGISTRY/kutt/url-shortener:latest
-          docker push $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG 
-          docker push $ECR_REGISTRY/kutt/url-shortener:latest
-          echo "::set-output name=image::$ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG"
-        working-directory: app/
 
       # Install Terraform
       - name: Setup Terraform

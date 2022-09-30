@@ -1,0 +1,207 @@
+# Workflow to deploy VPC to AWS Accounts.
+
+name: Deploy App
+
+# Controls when the workflow will run
+on:
+  # Manual Triggers the workflow upon need.
+  workflow_dispatch:
+
+  # Triggers the workflow on push event but only for the "master" branch and when the files inside tf-backend changes
+  push:
+    branches: [ "master" ]
+    paths:
+      - app/**
+
+jobs:
+  DeployToDev:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    name: Deploy To Development
+    environment:
+        name: dev
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      # Checks-out repository under $GITHUB_WORKSPACE, so the job can access it
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Configure the AWS Environment Variables inside the Runner
+      - name: Configure AWS credentials
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      # Login to Amazon ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+
+      # Docker Image Ops
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+            # Build a docker container and
+            # push it to ECR so that it can
+            # be deployed to ECS.
+            docker build -t $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG .
+            docker tag $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG $ECR_REGISTRY/kutt/url-shortener:latest
+            docker push $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG
+            docker push $ECR_REGISTRY/kutt/url-shortener:latest
+            echo "::set-output name=image::$ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG"
+        working-directory: app/
+
+      # Install Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.3.1
+
+      # Loop through TF files, Initialize, Plan and deploy changes.
+      - name: Terraform Deploy
+        run: |
+            terraform init
+            terraform fmt -check
+            terraform workspace select dev || terraform workspace new dev
+            terraform apply -auto-approve -input=false
+        working-directory: infra/
+
+  DeployToStaging:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    name: Deploy To Staging
+    environment:
+      name: qa
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      # Checks-out repository under $GITHUB_WORKSPACE, so the job can access it
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Configure the AWS Environment Variables inside the Runner
+      - name: Configure AWS credentials
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      # Login to Amazon ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+
+      # Docker Image Ops
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker build -t $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG .
+          docker tag $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG $ECR_REGISTRY/kutt/url-shortener:latest
+          docker push $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG 
+          docker push $ECR_REGISTRY/kutt/url-shortener:latest
+          echo "::set-output name=image::$ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG"
+        working-directory: app/
+
+      # Install Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.3.1
+
+      # Loop through TF files, Initialize, Plan and deploy changes.
+      - name: Terraform Deploy
+        run: |
+          terraform init
+          terraform fmt -check
+          terraform workspace select qa || terraform workspace new qa
+          terraform apply -auto-approve -input=false
+        working-directory: infra/
+
+  DeployToProd:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    name: Deploy To Prod
+    environment:
+      name: prod
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      # Checks-out repository under $GITHUB_WORKSPACE, so the job can access it
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Configure the AWS Environment Variables inside the Runner
+      - name: Configure AWS credentials
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      # Login to Amazon ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+
+      # Docker Image Ops
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker build -t $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG .
+          docker tag $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG $ECR_REGISTRY/kutt/url-shortener:latest
+          docker push $ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG 
+          docker push $ECR_REGISTRY/kutt/url-shortener:latest
+          echo "::set-output name=image::$ECR_REGISTRY/kutt/url-shortener:$IMAGE_TAG"
+        working-directory: app/
+
+      # Install Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.3.1
+
+      # Loop through TF files, Initialize, Plan and deploy changes.
+      - name: Terraform Deploy
+        run: |
+          terraform init
+          terraform fmt -check
+          terraform workspace select prod || terraform workspace new prod
+          terraform apply -auto-approve -input=false
+        working-directory: infra/

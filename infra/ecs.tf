@@ -42,6 +42,15 @@ resource "aws_ecs_task_definition" "main" {
           containerPort = local.container_port
         }
       ]
+      "logConfiguration" : {
+        "logDriver" : "awslogs",
+        "options" : {
+          "awslogs-create-group" : "true",
+          "awslogs-group" : "${local.service_name}",
+          "awslogs-region" : "eu-west-1",
+          "awslogs-stream-prefix" : "awslogs-"
+        }
+      }
     }
   ])
 }
@@ -68,6 +77,7 @@ resource "aws_ecs_service" "main" {
     container_name   = "${local.service_name}-container"
     container_port   = local.container_port
   }
+
 
   lifecycle {
     ignore_changes = [desired_count]
