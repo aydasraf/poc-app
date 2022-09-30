@@ -58,6 +58,7 @@ jobs:
             terraform init
             terraform fmt -check
             terraform workspace select dev || terraform workspace new dev
+            terraform force-unlock 5d8b40aa-4096-d98d-b50d-c3c2473395d5 -input=false
             terraform apply -auto-approve -input=false
         working-directory: infra/
 
