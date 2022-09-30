@@ -31,10 +31,6 @@ resource "aws_ecs_task_definition" "main" {
           "value" : "${data.terraform_remote_state.redis.outputs.redis_endpoint}"
         },
         {
-          "name" : "REDIS_PORT",
-          "value" : "6379"
-        },
-        {
           "name" : "SITE_NAME"
           "value" : "Url Shortener"
         },
