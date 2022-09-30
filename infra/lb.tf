@@ -25,9 +25,9 @@ resource "aws_alb_target_group" "tg" {
     path                = "/"
     healthy_threshold   = 2
     unhealthy_threshold = 5
-    timeout             = 15
-    interval            = 30
-    matcher             = "200"
+    timeout             = 10
+    interval            = 15
+    matcher             = "301"
   }
 }
 
