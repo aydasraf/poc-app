@@ -18,7 +18,7 @@ resource "aws_security_group" "ecs_task" {
   }
 
   tags = merge(
-    {Name = "${local.service_name}-ecs-sg"},
+    { Name = "${local.service_name}-ecs-sg" },
     local.tags
   )
 }

@@ -100,7 +100,7 @@ resource "aws_ecs_task_definition" "main" {
   ])
 
   tags = merge(
-    {Name = "${local.service_name}-ecs-task"},
+    { Name = "${local.service_name}-ecs-task" },
   local.tags)
 }
 
@@ -128,7 +128,7 @@ resource "aws_ecs_service" "main" {
   }
 
   tags = merge(
-    {Name = "${local.service_name}-ecs-service"},
+    { Name = "${local.service_name}-ecs-service" },
     local.tags
   )
 

@@ -30,7 +30,7 @@ resource "aws_alb_target_group" "tg" {
     matcher             = "301"
   }
   tags = merge(
-    {Name = "${local.service_name}-${terraform.workspace}-tg"},
+    { Name = "${local.service_name}-${terraform.workspace}-tg" },
     local.tags
   )
 }
