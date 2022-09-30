@@ -1,5 +1,5 @@
 resource "aws_ecs_task_definition" "main" {
-  family                   = local.service_name
+  family                   = "${local.service_name}-${terraform.workspace}"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = 256
@@ -116,7 +116,7 @@ resource "aws_ecs_task_definition" "main" {
   ])
 
   tags = merge(
-    { Name = "${local.service_name}-ecs-task" },
+    { Name = "${local.service_name}-${terraform.workspace}-ecs-task" },
   local.tags)
 }
 

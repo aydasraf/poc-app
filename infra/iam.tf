@@ -21,12 +21,12 @@ data "aws_iam_policy_document" "ecs_task_role" {
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name               = "${local.service_name}-task-execution-role"
+  name               = "${local.service_name}-${terraform.workspace}-task-execution-role"
   assume_role_policy = data.aws_iam_policy_document.ecs_task_execution_role.json
 }
 
 resource "aws_iam_role" "ecs_task_role" {
-  name               = "${local.service_name}-task-role"
+  name               = "${local.service_name}-${terraform.workspace}-task-role"
   assume_role_policy = data.aws_iam_policy_document.ecs_task_role.json
 }
 
@@ -50,12 +50,12 @@ data "aws_iam_policy_document" "cwlogs_access" {
 }
 
 resource "aws_iam_policy" "secret_manager_access" {
-  name   = "${local.service_name}-task-role-secret-manager-access"
+  name   = "${local.service_name}-${terraform.workspace}-task-role-secret-manager-access"
   policy = data.aws_iam_policy_document.secret_manager_access.json
 }
 
 resource "aws_iam_policy" "cwlogs_access" {
-  name   = "${local.service_name}-task-role-cwlogs-access"
+  name   = "${local.service_name}-${terraform.workspace}-task-role-cwlogs-access"
   policy = data.aws_iam_policy_document.cwlogs_access.json
 }
 

@@ -1,5 +1,5 @@
 resource "aws_security_group" "ecs_task" {
-  name   = "${local.service_name}-task-sg"
+  name   = "${local.service_name}-${terraform.workspace}-task-sg"
   vpc_id = data.terraform_remote_state.vpc.outputs.vpc_id
 
   ingress {
