@@ -107,7 +107,7 @@ resource "aws_ecs_task_definition" "main" {
         "logDriver" : "awslogs",
         "options" : {
           "awslogs-create-group" : "true",
-          "awslogs-group" : "${local.service_name}",
+          "awslogs-group" : "${local.service_name}-${terraform.workspace}",
           "awslogs-region" : "eu-west-1",
           "awslogs-stream-prefix" : "awslogs-"
         }
