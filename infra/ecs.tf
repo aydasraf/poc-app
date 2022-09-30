@@ -28,7 +28,7 @@ resource "aws_ecs_task_definition" "main" {
         },
         {
           "name" : "REDIS_HOST",
-          "value" : "${data.terraform_remote_state.redis.outputs.redis_endpoint}"
+          "value" : "${data.terraform_remote_state.redis.outputs.url_shortener_redis_address}"
         },
         {
           "name" : "REDIS_PORT",
